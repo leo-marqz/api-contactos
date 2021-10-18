@@ -23,6 +23,7 @@
         $contacto = new Contacto($fila['id_contacto'], $fila['nombre'], $fila['telefono']);
         array_push($contactos, $contacto);
       }
+      get();
     }
   }else{
     //OBTENER TODOS LOS CONTACTOS
@@ -32,6 +33,7 @@
       $contacto = new Contacto($fila['id_contacto'], $fila['nombre'], $fila['telefono']);
       array_push($contactos, $contacto);
     }
+    get();
   }
 
 
@@ -51,7 +53,6 @@
           $telefono = $_POST['telefono'];
           $consulta = "INSERT INTO contactos (nombre, telefono) VALUES ('$nombre', '$telefono')";
           $con->query($consulta);
-
           $contactos['test'] = "agregar";
           break;
 
@@ -62,7 +63,6 @@
           $telefono = $_POST['telefono'];
           $consulta = "UPDATE contactos SET nombre = '$nombre', telefono = '$telefono' WHERE id_contacto = '$idContacto'";
           $con->query($consulta);
-
           $contactos['test'] = "actualizar";
           break;
 
@@ -79,7 +79,11 @@
     }
   }
 
-  echo json_encode($contactos);
+
+  function get(){
+    global $contactos;
+    echo json_encode($contactos);
+  }
 
 
 
