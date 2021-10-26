@@ -62,6 +62,8 @@ Class CxContacto {
             $resultado = true;
         }catch(Exception $e){
           $resultado = false;
+        }finally{
+          $this->conexion->close();
         }
         return $resultado;
       }
@@ -74,6 +76,8 @@ Class CxContacto {
               $resultado = true;
           }catch(Exception $e){
             $resultado = false;
+          }finally{
+            $this->conexion->close();
           }
           return $resultado;
       }
@@ -86,6 +90,8 @@ Class CxContacto {
               $resultado = true;
           }catch(Exception $e){
             $resultado = false;
+          }finally{
+            $this->conexion->close();
           }
           return $resultado;
       }
