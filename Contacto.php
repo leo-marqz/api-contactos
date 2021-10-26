@@ -1,4 +1,6 @@
 <?php 
+  
+  require_once("./config.php");
 
   class Contacto {
 
@@ -6,14 +8,10 @@
       public string $nombre;
       public string $telefono;
 
-      public function __construct(int $id, string $nombre, string $telefono){
+      public function __construct($id, $nombre, $telefono){
           $this->id = $id;
           $this->nombre = $nombre;
           $this->telefono = $telefono;
       }
-
-
-  }
-
-
+    }
 ?>

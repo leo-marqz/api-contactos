@@ -1,92 +1,53 @@
 <?php 
 
-  require_once("./config.php");
-  require_once("./Contacto.php");
+  //MEJORA DE API
+  //API: V1.2
+
+  require_once("./config.php"); //Class CxContacto
+  require_once("./Contacto.php"); //Class Contacto
+  require_once("./helpers.php"); //$respuestas[]
   
   //['MIS VARIABLES']
-  $con = Conexion::getConexion();
   $contactos = [];
-  $idContacto = null;
-  $nombre = null;
-  $telefono = null;
-  $consulta = null;
-  $resultado = null;
-
-  //@GET('http://localhost/ws_app/')
-  if($_GET){
-    //OBTENER CONTACTO POR ID
-    if($_GET['accion'] == 'obtener'){
-      $idContacto = $_GET['id'];
-      $consulta = "SELECT * FROM contactos WHERE id_contacto = '$idContacto'";
-      $resultado = $con->query($consulta);
-      while($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)){
-        $contacto = new Contacto($fila['id_contacto'], $fila['nombre'], $fila['telefono']);
-        array_push($contactos, $contacto);
-      }
-      get();
-    }
-  }else{
-    //OBTENER TODOS LOS CONTACTOS
-    $resultado = $con->query("SELECT * FROM contactos");
-  
-    while($fila = mysqli_fetch_array($resultado, MYSQLI_ASSOC)){
-      $contacto = new Contacto($fila['id_contacto'], $fila['nombre'], $fila['telefono']);
-      array_push($contactos, $contacto);
-    }
-    get();
-  }
-
-
-  /* print_r($contactos); */
-  /* var_dump($contactos); */
+  $cxContacto = new CxContacto();
 
   //@POST(http://localhost/ws_app/')
   if($_POST){
     if(isset($_POST['accion'])){
-      $accion = $_POST['accion'];
-
+      $accion = $_POST['accion']; 
       switch($accion){
-
-        //AGREGAR CONTACTO
         case 'agregar':
-          $nombre = $_POST['nombre'];
-          $telefono = $_POST['telefono'];
-          $consulta = "INSERT INTO contactos (nombre, telefono) VALUES ('$nombre', '$telefono')";
-          $con->query($consulta);
-          $contactos['test'] = "agregar";
+          $rs = $cxContacto->agregar($_POST['nombre'], $_POST['telefono']);
+          if($rs) echo json_encode($respuestas["agregar"]["ok"]);
+          else echo json_encode($respuestas['agregar']['error']);
           break;
-
-        //ACTUALIZAR CONTACTO
         case 'actualizar':
-          $idContacto = $_POST['id'];
-          $nombre = $_POST['nombre'];
-          $telefono = $_POST['telefono'];
-          $consulta = "UPDATE contactos SET nombre = '$nombre', telefono = '$telefono' WHERE id_contacto = '$idContacto'";
-          $con->query($consulta);
-          $contactos['test'] = "actualizar";
+          $rs = $cxContacto->actualizar($_POST['id'], $_POST['nombre'], $_POST['telefono'] );
+          if($rs) echo json_encode($respuestas["actualizar"]["ok"]);
+          else echo json_encode($respuestas['actualizar']['error']);
           break;
-
-        //ELIMINAR CONTACTO
         case 'eliminar':
-          $idContacto = $_POST['id'];
-          $consulta = "DELETE FROM contactos WHERE id_contacto = '$idContacto'";
-          $con->query($consulta);
-          $contactos['test'] = "eliminar";
+          $rs = $cxContacto->eliminar($_POST['id']);
+          if($rs) echo json_encode($respuestas["eliminar"]["ok"]);
+          else echo json_encode($respuestas['eliminar']['error']);
           break;
-
       }
-
     }
   }
-
-
-  function get(){
-    global $contactos;
+  //@GET('http://localhost/ws_app/')
+  else if($_GET){ //OBTENER CONTACTO POR ID
+    if($_GET['accion'] == 'obtener'){
+      $contactos = $cxContacto->get($_GET['id']);
+      echo json_encode($contactos);
+    }
+  }else{ //OBTENER TODOS LOS CONTACTOS
+    $contactos = $cxContacto->todos();
     echo json_encode($contactos);
   }
 
-
-
-
+  /* function get(){
+    global $contactos;
+    echo json_encode($contactos);
+  } */
 
 ?>
