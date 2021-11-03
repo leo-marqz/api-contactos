@@ -39,7 +39,11 @@
     if($_GET['accion'] == 'obtener'){
       $contactos = $cxContacto->get($_GET['id']);
       echo json_encode($contactos);
+    }else if($_GET['accion'] == 'buscar'){
+      $contactos = $cxContacto->buscar($_GET['b']);
+      echo json_encode($contactos);
     }
+
   }else{ //OBTENER TODOS LOS CONTACTOS
     $contactos = $cxContacto->todos();
     echo json_encode($contactos);

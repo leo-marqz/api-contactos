@@ -95,6 +95,32 @@ Class CxContacto {
           }
           return $resultado;
       }
+
+      public function buscar($b){
+        $contactos = [];
+        $consulta = "SELECT * FROM contactos WHERE nombre LIKE '%$b%'";
+        if(!empty($b)){
+          if(is_numeric($b)){
+            $consulta = "SELECT * FROM contactos WHERE telefono LIKE '%$b%' ";
+          }
+          try {
+              $respuesta = $this->conexion->query($consulta);
+              if($respuesta->num_rows > 0){
+                  while($c = mysqli_fetch_array($respuesta, MYSQLI_ASSOC)){
+                      $contacto = new Contacto($c['id_contacto'], $c['nombre'], $c['telefono']);
+                      array_push($contactos, $contacto);
+                  }
+              }
+          }catch(Exception $e){
+            die($e->getMessage());
+          }finally{
+              $respuesta->close();
+              $this->conexion->close();
+          }
+          
+        }else{}
+        return $contactos;
+      }
     
 }
 
