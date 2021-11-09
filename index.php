@@ -37,15 +37,15 @@
   //@GET('http://localhost/ws_app/')
   else if($_GET){ //OBTENER CONTACTO POR ID
     if($_GET['accion'] == 'obtener'){
-      $contactos = $cxContacto->get($_GET['id']);
+      $contactos = ["data"=>$cxContacto->get($_GET['id'])];
       echo json_encode($contactos);
     }else if($_GET['accion'] == 'buscar'){
-      $contactos = $cxContacto->buscar($_GET['b']);
+      $contactos = ["data"=>$cxContacto->buscar($_GET['b'])];
       echo json_encode($contactos);
     }
 
   }else{ //OBTENER TODOS LOS CONTACTOS
-    $contactos = $cxContacto->todos();
+    $contactos = ["data"=>$cxContacto->todos()];
     echo json_encode($contactos);
   }
 
